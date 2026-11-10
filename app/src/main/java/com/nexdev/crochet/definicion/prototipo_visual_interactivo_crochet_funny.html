@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crochet Funny - Prototipo UI/UX</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #f3ede4;
+    }
+    h1, h2, h3, .brand-font {
+      font-family: 'Quicksand', sans-serif;
+    }
+    /* Custom scrollbar for mobile frame */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .phone-frame {
+      width: 390px;
+      height: 820px;
+      border-radius: 46px;
+      box-shadow: 0 25px 60px -15px rgba(72, 52, 52, 0.35), 0 0 0 12px #2c2220, 0 0 0 14px #5a4642;
+      position: relative;
+      overflow: hidden;
+      background: #FFFBF7;
+    }
+    .round-active {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 25px -5px rgba(224, 122, 95, 0.25);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row items-center justify-center p-4 lg:p-8 gap-8 text-[#3D312E]">
+
+  <!-- Panel lateral explicativo / Selector rápido de Pantallas -->
+  <div class="max-w-md w-full bg-white/90 backdrop-blur p-6 rounded-3xl shadow-lg border border-[#E8D8C8]">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 rounded-2xl bg-[#E07A5F] text-white flex items-center justify-center text-xl font-bold shadow-sm">
+        🧶
+      </div>
+      <div>
+        <h1 class="text-xl font-bold text-[#3D312E]">Crochet Funny • Referencia UI</h1>
+        <p class="text-xs text-[#8C7A75]">Maqueta interactiva para Android Studio</p>
+      </div>
+    </div>
+
+    <p class="text-sm text-[#5E4E4A] mb-4 leading-relaxed">
+      Interactúa con el teléfono o usa estos botones para saltar directamente a cada pantalla del flujo propuesto:
+    </p>
+
+    <div class="space-y-2 mb-6">
+      <button onclick="navigateTo('welcome')" id="nav-btn-welcome" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition flex items-center justify-between bg-[#F4E6DD] text-[#E07A5F]">
+        <span>1. Pantalla de Bienvenida (Home/Splash)</span>
+        <span class="text-xs opacity-75">→</span>
+      </button>
+      <button onclick="navigateTo('catalog')" id="nav-btn-catalog" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition flex items-center justify-between hover:bg-[#F9F3EE] text-[#5E4E4A]">
+        <span>2. Catálogo y Categorías</span>
+        <span class="text-xs opacity-75">→</span>
+      </button>
+      <button onclick="navigateTo('detail')" id="nav-btn-detail" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition flex items-center justify-between hover:bg-[#F9F3EE] text-[#5E4E4A]">
+        <span>3. Vista Previa de Patrón</span>
+        <span class="text-xs opacity-75">→</span>
+      </button>
+      <button onclick="navigateTo('tracker')" id="nav-btn-tracker" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition flex items-center justify-between hover:bg-[#F9F3EE] text-[#5E4E4A]">
+        <span>4. Modo Tejido (Seguimiento Activo)</span>
+        <span class="text-xs opacity-75">→</span>
+      </button>
+      <button onclick="navigateTo('stats')" id="nav-btn-stats" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition flex items-center justify-between hover:bg-[#F9F3EE] text-[#5E4E4A]">
+        <span>5. Finalizados y Más Realizados</span>
+        <span class="text-xs opacity-75">→</span>
+      </button>
+      <button onclick="navigateTo('creator')" id="nav-btn-creator" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition flex items-center justify-between hover:bg-[#F9F3EE] text-[#5E4E4A]">
+        <span>6. Crear Proyecto Propio (Fase 2)</span>
+        <span class="text-xs opacity-75">→</span>
+      </button>
+    </div>
+
+    <!-- Estado de Persistencia Simulado -->
+    <div class="bg-[#FDF8F4] border border-[#EAD9CA] rounded-2xl p-4">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-[#A38A83]">Estado Guardado (Room DB Simulado)</span>
+        <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#528265] bg-[#E3F2E9] px-2 py-0.5 rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#528265] animate-pulse"></span> Auto-Save
+        </span>
+      </div>
+      <div id="debug-persistence" class="text-xs text-[#5E4E4A] font-mono mt-2 space-y-1">
+        <!-- Llenado por JS -->
+      </div>
+      <button onclick="simulateAppRestart()" class="mt-3 w-full py-2 bg-[#3D312E] hover:bg-[#2a211f] text-white text-xs font-bold rounded-xl transition">
+        🔄 Simular Cierre / Reinicio del Teléfono
+      </button>
+    </div>
+  </div>
+
+  <!-- Marco del Dispositivo Android -->
+  <div class="phone-frame flex flex-col justify-between select-none">
+    
+    <!-- Barra de Estado Android -->
+    <div class="px-7 pt-3 pb-2 flex justify-between items-center text-xs font-bold text-[#6E5D58] bg-[#FFFBF7] z-20">
+      <span>9:41</span>
+      <div class="w-20 h-4 bg-[#2c2220] rounded-full"></div>
+      <div class="flex items-center gap-1.5">
+        <span>5G</span>
+        <span>100% 🔋</span>
+      </div>
+    </div>
+
+    <!-- Contenedor Dinámico de Pantallas -->
+    <div id="screen-container" class="flex-1 overflow-y-auto no-scrollbar relative flex flex-col">
+      
+      <!-- ==========================================
+           PANTALLA 1: BIENVENIDA (WELCOME)
+           ========================================== -->
+      <div id="screen-welcome" class="flex-1 flex flex-col justify-between p-6 bg-gradient-to-b from-[#FFFBF7] via-[#FDF4EC] to-[#F9E5D8]">
+        <div class="mt-6 text-center">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 border border-[#EED7C5] text-[#E07A5F] text-xs font-bold mb-4 shadow-sm">
+            ✨ Tu asistente de amigurumis
+          </div>
+          <div class="w-28 h-28 mx-auto bg-white rounded-full shadow-md border-4 border-[#F4A261]/30 flex items-center justify-center text-6xl mb-4">
+            🐙
+          </div>
+          <h1 class="text-4xl font-bold text-[#3D312E] tracking-tight">Crochet Funny</h1>
+          <p class="text-sm text-[#7D6B65] mt-2 px-4">
+            Teje sin perder la cuenta. Guardamos tu pieza y vuelta automáticamente en cada punto.
+          </p>
+        </div>
+
+        <!-- Tarjeta de Proyecto en Curso (Persistencia) -->
+        <div id="welcome-resume-card" class="bg-white rounded-3xl p-5 shadow-md border border-[#EED7C5] my-auto">
+          <!-- Renderizado dinámico por JS -->
+        </div>
+
+        <div class="space-y-3 mb-2">
+          <button onclick="navigateTo('catalog')" class="w-full py-4 bg-[#E07A5F] hover:bg-[#d0694e] active:scale-[0.99] text-white font-bold rounded-2xl shadow-lg shadow-[#E07A5F]/30 transition flex items-center justify-center gap-2 text-base">
+            <span>Explorar Proyectos</span>
+            <span>→</span>
+          </button>
+          <div class="grid grid-cols-2 gap-2.5">
+            <button onclick="navigateTo('stats')" class="py-3 bg-white/90 hover:bg-white text-[#5E4E4A] font-bold rounded-2xl border border-[#EED7C5] text-xs transition">
+              🏆 Finalizados (<span id="welcome-completed-count">0</span>)
+            </button>
+            <button onclick="navigateTo('creator')" class="py-3 bg-white/90 hover:bg-white text-[#5E4E4A] font-bold rounded-2xl border border-[#EED7C5] text-xs transition">
+              ➕ Crear Patrón
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           PANTALLA 2: CATÁLOGO DE PROYECTOS
+           ========================================== -->
+      <div id="screen-catalog" class="hidden flex-1 flex flex-col p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-2xl font-bold text-[#3D312E]">Proyectos</h2>
+            <p class="text-xs text-[#8C7A75]">Escoge un diseño para empezar a tejer</p>
+          </div>
+          <button onclick="navigateTo('welcome')" class="w-9 h-9 rounded-full bg-[#F4E6DD] text-[#E07A5F] flex items-center justify-center font-bold text-sm" title="Inicio">
+            🏠
+          </button>
+        </div>
+
+        <!-- Banner deContinuar rápido si hay sesión activa -->
+        <div id="catalog-active-banner" class="mb-4"></div>
+
+        <!-- Filtros de Categoría -->
+        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2 mb-4" id="category-chips">
+          <!-- Renderizado por JS -->
+        </div>
+
+        <!-- Lista de Patrones -->
+        <div id="catalog-list" class="space-y-3.5 pb-6">
+          <!-- Renderizado por JS -->
+        </div>
+      </div>
+
+      <!-- ==========================================
+           PANTALLA 3: VISTA PREVIA (DETALLE)
+           ========================================== -->
+      <div id="screen-detail" class="hidden flex-1 flex flex-col justify-between p-5">
+        <div id="detail-content" class="space-y-4 pb-6">
+          <!-- Renderizado por JS -->
+        </div>
+      </div>
+
+      <!-- ==========================================
+           PANTALLA 4: MODO TEJIDO (SEGUIMIENTO ACTIVO)
+           ========================================== -->
+      <div id="screen-tracker" class="hidden flex-1 flex flex-col h-full bg-[#FAF5F0]">
+        <!-- Cabecera fija de Modo Tejido -->
+        <div class="bg-white px-5 pt-3 pb-3.5 border-b border-[#EAD9CA] shadow-sm z-10">
+          <div class="flex items-center justify-between mb-2">
+            <button onclick="navigateTo('catalog')" class="text-xs font-bold text-[#7D6B65] flex items-center gap-1 bg-[#F5ECE4] px-2.5 py-1.5 rounded-xl">
+              ← Pausar y Salir
+            </button>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] font-bold bg-[#E3F2E9] text-[#437A57] px-2 py-1 rounded-lg" title="FLAG_KEEP_SCREEN_ON activo">
+                🔆 Pantalla Activa
+              </span>
+              <button onclick="resetCurrentPart()" class="text-[11px] font-bold bg-[#FCE8E6] text-[#C53929] px-2 py-1 rounded-lg" title="Reiniciar pieza actual">
+                ↺ Reiniciar pieza
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 id="tracker-pattern-title" class="text-lg font-bold text-[#3D312E] leading-tight">Pulpo de Apego</h2>
+              <p id="tracker-overall-subtitle" class="text-xs text-[#8C7A75]">Progreso guardado automáticamente</p>
+            </div>
+            <div class="text-right">
+              <span id="tracker-percent" class="text-lg font-extrabold text-[#E07A5F]">25%</span>
+            </div>
+          </div>
+
+          <!-- Barra de Progreso General -->
+          <div class="w-full h-2 bg-[#F0E4D8] rounded-full overflow-hidden mt-2">
+            <div id="tracker-progress-bar" class="h-full bg-[#E07A5F] transition-all duration-300" style="width: 25%"></div>
+          </div>
+
+          <!-- Pestañas de Piezas del Diseño -->
+          <div id="tracker-parts-tabs" class="flex gap-2 overflow-x-auto no-scrollbar mt-3 pt-1">
+            <!-- Renderizado por JS -->
+          </div>
+        </div>
+
+        <!-- Sub-barra de Instancia de Pieza (Ej. Tentáculo 2 de 8) -->
+        <div id="tracker-instance-bar" class="bg-[#FDF8F4] px-5 py-2 border-b border-[#EAD9CA] flex items-center justify-between text-xs">
+          <!-- Renderizado por JS -->
+        </div>
+
+        <!-- Lista de Vueltas (Con la vuelta activa resaltada) -->
+        <div id="tracker-rounds-list" class="flex-1 overflow-y-auto p-4 space-y-2.5">
+          <!-- Renderizado por JS -->
+        </div>
+
+        <!-- Controles Inferiores Ergonómicos -->
+        <div class="bg-white p-4 border-t border-[#EAD9CA] shadow-lg z-10">
+          <div class="flex items-center gap-2.5">
+            <button onclick="prevRound()" id="btn-prev-round" class="px-4 py-3.5 rounded-2xl border-2 border-[#E4D3C5] text-[#6E5D58] font-bold text-sm active:scale-95 transition disabled:opacity-40">
+              - Vuelta
+            </button>
+            <button onclick="nextRoundOrFinish()" id="btn-next-round" class="flex-1 py-3.5 px-5 rounded-2xl bg-[#E07A5F] hover:bg-[#d16a4f] text-white font-bold text-base shadow-md shadow-[#E07A5F]/25 active:scale-[0.98] transition flex items-center justify-center gap-2">
+              <span>+ Siguiente Vuelta</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           PANTALLA 5: FINALIZADOS Y MÁS REALIZADOS
+           ========================================== -->
+      <div id="screen-stats" class="hidden flex-1 flex flex-col p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-2xl font-bold text-[#3D312E]">Mis Logros 🏆</h2>
+            <p class="text-xs text-[#8C7A75]">Proyectos terminados y ranking de favoritos</p>
+          </div>
+        </div>
+
+        <!-- Ranking: Más Realizados -->
+        <div class="mb-5">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-[#A38A83] mb-2.5">🔥 Más Realizados (Top Patrones)</h3>
+          <div id="stats-most-made" class="space-y-2">
+            <!-- Renderizado por JS -->
+          </div>
+        </div>
+
+        <!-- Historial Cronológico -->
+        <div class="flex-1">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-[#A38A83] mb-2.5">📅 Historial de Proyectos Finalizados</h3>
+          <div id="stats-history-list" class="space-y-2.5 pb-6">
+            <!-- Renderizado por JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           PANTALLA 6: CREADOR DE PROYECTOS (FASE 2)
+           ========================================== -->
+      <div id="screen-creator" class="hidden flex-1 flex flex-col p-5">
+        <div class="mb-4">
+          <span class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-[#F4E6DD] text-[#E07A5F]">Fase 2 • Escalabilidad</span>
+          <h2 class="text-2xl font-bold text-[#3D312E] mt-1">Nuevo Patrón</h2>
+          <p class="text-xs text-[#8C7A75]">Agrega tu propio diseño indicando piezas, vueltas y puntos.</p>
+        </div>
+
+        <form onsubmit="saveCustomPattern(event)" class="space-y-3.5 pb-6">
+          <div class="bg-white p-4 rounded-2xl border border-[#EAD9CA] space-y-3">
+            <div>
+              <label class="block text-xs font-bold text-[#5E4E4A] mb-1">Nombre del Proyecto</label>
+              <input id="custom-name" type="text" required placeholder="Ej. Conejito Dormilón" class="w-full px-3 py-2 rounded-xl border border-[#DFCBB9] text-sm focus:outline-none focus:border-[#E07A5F]" />
+            </div>
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-xs font-bold text-[#5E4E4A] mb-1">Categoría</label>
+                <select id="custom-category" class="w-full px-3 py-2 rounded-xl border border-[#DFCBB9] text-sm bg-white">
+                  <option value="Apego">Apego</option>
+                  <option value="Animales">Animales</option>
+                  <option value="Personajes">Personajes</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-[#5E4E4A] mb-1">Aguja (mm)</label>
+                <input id="custom-hook" type="number" step="0.5" value="3.0" required class="w-full px-3 py-2 rounded-xl border border-[#DFCBB9] text-sm" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-[#5E4E4A] mb-1">Hilo Recomendado</label>
+              <input id="custom-yarn" type="text" value="Algodón grosor medio" required class="w-full px-3 py-2 rounded-xl border border-[#DFCBB9] text-sm" />
+            </div>
+          </div>
+
+          <!-- Pieza de ejemplo para creación rápida -->
+          <div class="bg-white p-4 rounded-2xl border border-[#EAD9CA] space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-[#E07A5F] uppercase">Pieza Inicial</span>
+              <span class="text-[11px] text-[#8C7A75]">Vueltas configurables</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <div class="col-span-2">
+                <label class="block text-[11px] font-bold text-[#5E4E4A] mb-1">Nombre de Pieza</label>
+                <input id="custom-part-name" type="text" value="Cuerpo Base" required class="w-full px-3 py-1.5 rounded-xl border border-[#DFCBB9] text-sm" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-[#5E4E4A] mb-1">Cantidad</label>
+                <input id="custom-part-qty" type="number" min="1" max="12" value="1" required class="w-full px-3 py-1.5 rounded-xl border border-[#DFCBB9] text-sm" />
+              </div>
+            </div>
+
+            <div class="space-y-2 pt-1">
+              <label class="block text-[11px] font-bold text-[#5E4E4A]">Vueltas (Formato: Instrucción | Puntos)</label>
+              <div class="text-xs bg-[#FAF5F0] p-2.5 rounded-xl border border-[#EAD9CA] space-y-1.5">
+                <div class="flex gap-2 items-center">
+                  <span class="font-bold text-[#E07A5F] w-8">V1:</span>
+                  <input id="custom-r1" type="text" value="Anillo mágico 6 pb" class="flex-1 bg-white px-2 py-1 rounded border border-[#DFCBB9]" />
+                  <input id="custom-r1-pts" type="number" value="6" class="w-14 bg-white px-2 py-1 rounded border border-[#DFCBB9] text-center" />
+                </div>
+                <div class="flex gap-2 items-center">
+                  <span class="font-bold text-[#E07A5F] w-8">V2:</span>
+                  <input id="custom-r2" type="text" value="6 aumentos" class="flex-1 bg-white px-2 py-1 rounded border border-[#DFCBB9]" />
+                  <input id="custom-r2-pts" type="number" value="12" class="w-14 bg-white px-2 py-1 rounded border border-[#DFCBB9] text-center" />
+                </div>
+                <div class="flex gap-2 items-center">
+                  <span class="font-bold text-[#E07A5F] w-8">V3:</span>
+                  <input id="custom-r3" type="text" value="(1 pb, 1 aum) x 6" class="flex-1 bg-white px-2 py-1 rounded border border-[#DFCBB9]" />
+                  <input id="custom-r3-pts" type="number" value="18" class="w-14 bg-white px-2 py-1 rounded border border-[#DFCBB9] text-center" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3.5 bg-[#528265] hover:bg-[#446e55] text-white font-bold rounded-2xl shadow-md transition text-sm">
+            💾 Guardar Patrón en el Catálogo
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- Barra de Navegación Inferior Android (Visible en Catálogo, Logros, Crear) -->
+    <div id="bottom-nav" class="bg-white border-t border-[#EAD9CA] px-6 py-2.5 flex justify-around items-center text-xs font-bold text-[#8C7A75]">
+      <button onclick="navigateTo('welcome')" id="bnav-welcome" class="flex flex-col items-center gap-0.5 text-[#E07A5F]">
+        <span class="text-lg">🏠</span>
+        <span>Inicio</span>
+      </button>
+      <button onclick="navigateTo('catalog')" id="bnav-catalog" class="flex flex-col items-center gap-0.5">
+        <span class="text-lg">🧶</span>
+        <span>Catálogo</span>
+      </button>
+      <button onclick="navigateTo('tracker')" id="bnav-tracker" class="flex flex-col items-center gap-0.5 relative">
+        <span class="text-lg">⏱️</span>
+        <span>Tejiendo</span>
+        <span id="bnav-dot" class="w-2 h-2 rounded-full bg-[#E07A5F] absolute top-0 right-2"></span>
+      </button>
+      <button onclick="navigateTo('stats')" id="bnav-stats" class="flex flex-col items-center gap-0.5">
+        <span class="text-lg">🏆</span>
+        <span>Logros</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Toast de Notificación -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-[#3D312E] text-white px-4 py-3 rounded-2xl shadow-xl text-xs font-bold opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+    Acción realizada
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. JSON SEMILLA DE PATRONES (Precargados)
+    // ==========================================
+    const initialPatterns = [
+      {
+        id: "pat_pulpo_01",
+        nombre: "Pulpo de Apego",
+        icono: "🐙",
+        colorBg: "#FDE8E1",
+        categoria: "Apego",
+        dificultad: "Básico",
+        tiempoEstimado: "3 hrs",
+        hilo: "Algodón peinado 100% (4 ply)",
+        aguja: "2.5 mm",
+        extras: ["Ojos de seguridad 8mm (o bordados)", "Relleno siliconado", "Aguja lanera"],
+        piezas: [
+          {
+            idPieza: "pulpo_cabeza",
+            nombre: "Cabeza",
+            cantidad: 1,
+            notas: "Rellenar firmemente en la vuelta 5.",
+            vueltas: [
+              { numero: 1, instruccion: "Anillo mágico de 6 pb", puntos: 6, repeticiones: 1 },
+              { numero: 2, instruccion: "6 aumentos (2 pb en cada punto)", puntos: 12, repeticiones: 6 },
+              { numero: 3, instruccion: "(1 pb, 1 aum) x 6", puntos: 18, repeticiones: 6 },
+              { numero: 4, instruccion: "(2 pb, 1 aum) x 6", puntos: 24, repeticiones: 6 },
+              { numero: 5, instruccion: "Tejer 24 pb sin aumentos (Altura)", puntos: 24, repeticiones: 1 },
+              { numero: 6, instruccion: "(2 pb, 1 dism) x 6 y cerrar", puntos: 18, repeticiones: 6 }
+            ]
+          },
+          {
+            idPieza: "pulpo_tentaculos",
+            nombre: "Tentáculo",
+            cantidad: 8,
+            notas: "No lleva relleno. Se riza automáticamente al hacer aumentos.",
+            vueltas: [
+              { numero: 1, instruccion: "Tejer 40 cadenas al aire", puntos: 40, repeticiones: 1 },
+              { numero: 2, instruccion: "Desde la 2da cad: 2 pb en cada cad (x39)", puntos: 78, repeticiones: 39 }
+            ]
+          }
+        ]
+      },
+      {
+        id: "pat_angel_02",
+        nombre: "Angelito Protector",
+        icono: "👼",
+        colorBg: "#E6F0FA",
+        categoria: "Personajes",
+        dificultad: "Intermedio",
+        tiempoEstimado: "4.5 hrs",
+        hilo: "Algodón mercerizado blanco y dorado",
+        aguja: "2.0 mm",
+        extras: ["Hilo metalizado dorado para aureola", "Relleno sintético"],
+        piezas: [
+          {
+            idPieza: "angel_cuerpo",
+            nombre: "Cabeza y Túnica",
+            cantidad: 1,
+            notas: "Cambiar de color piel a blanco en la vuelta 4.",
+            vueltas: [
+              { numero: 1, instruccion: "Anillo mágico de 6 pb (Color Piel)", puntos: 6, repeticiones: 1 },
+              { numero: 2, instruccion: "6 aumentos", puntos: 12, repeticiones: 6 },
+              { numero: 3, instruccion: "(1 pb, 1 aum) x 6", puntos: 18, repeticiones: 6 },
+              { numero: 4, instruccion: "Cambio a Blanco: Blo 18 pb", puntos: 18, repeticiones: 1 },
+              { numero: 5, instruccion: "(2 pb, 1 aum) x 6 para falda", puntos: 24, repeticiones: 6 }
+            ]
+          },
+          {
+            idPieza: "angel_alas",
+            nombre: "Alita",
+            cantidad: 2,
+            notas: "Tejer plano o en redondo sin rellenar.",
+            vueltas: [
+              { numero: 1, instruccion: "Anillo mágico de 6 pb", puntos: 6, repeticiones: 1 },
+              { numero: 2, instruccion: "(1 pb, 1 aum) x 3", puntos: 9, repeticiones: 3 },
+              { numero: 3, instruccion: "9 puntos bajos alrededor y cerrar", puntos: 9, repeticiones: 1 }
+            ]
+          }
+        ]
+      },
+      {
+        id: "pat_rana_03",
+        nombre: "Rana Saltarina",
+        icono: "🐸",
+        colorBg: "#E3F2E9",
+        categoria: "Animales",
+        dificultad: "Básico",
+        tiempoEstimado: "2.5 hrs",
+        hilo: "Acrílico o Algodón Verde Manzana",
+        aguja: "3.0 mm",
+        extras: ["Ojos de seguridad 10mm", "Hilo rosa para mejillas"],
+        piezas: [
+          {
+            idPieza: "rana_cuerpo",
+            nombre: "Cuerpo Redondo",
+            cantidad: 1,
+            notas: "Rellenar bien para darle forma esférica.",
+            vueltas: [
+              { numero: 1, instruccion: "Anillo mágico de 6 pb", puntos: 6, repeticiones: 1 },
+              { numero: 2, instruccion: "6 aumentos", puntos: 12, repeticiones: 6 },
+              { numero: 3, instruccion: "(1 pb, 1 aum) x 6", puntos: 18, repeticiones: 6 },
+              { numero: 4, instruccion: "18 pb alrededor", puntos: 18, repeticiones: 1 }
+            ]
+          },
+          {
+            idPieza: "rana_ojos",
+            nombre: "Globo Ocular",
+            cantidad: 2,
+            notas: "Coser en la parte superior de la cabeza.",
+            vueltas: [
+              { numero: 1, instruccion: "Anillo mágico de 5 pb", puntos: 5, repeticiones: 1 },
+              { numero: 2, instruccion: "5 aumentos", puntos: 10, repeticiones: 5 },
+              { numero: 3, instruccion: "10 pb en verde", puntos: 10, repeticiones: 1 }
+            ]
+          },
+          {
+            idPieza: "rana_patas",
+            nombre: "Patita",
+            cantidad: 4,
+            notas: "Rellenar solo la punta.",
+            vueltas: [
+              { numero: 1, instruccion: "Anillo mágico de 6 pb", puntos: 6, repeticiones: 1 },
+              { numero: 2, instruccion: "6 pb por 3 vueltas seguidas", puntos: 6, repeticiones: 3 }
+            ]
+          }
+        ]
+      }
+    ];
+
+    // ==========================================
+    // 2. ESTADO PERSISTENTE (Simulando Room DB)
+    // ==========================================
+    const STORAGE_KEY = "crochet_funny_state_v1";
+
+    let appState = {
+      currentCategory: "Todos",
+      selectedPatternId: "pat_pulpo_01",
+      patterns: initialPatterns,
+      // Proyecto Activo guardado automáticamente
+      activeProject: {
+        patternId: "pat_pulpo_01",
+        partIndex: 0,       // 0 = Cabeza
+        partInstance: 1,    // 1 de 1 (o 1 de 8 en tentáculos)
+        roundIndex: 2,      // Vuelta 3 (índice base 0)
+        repCount: 2,        // Sub-contador de repeticiones en la vuelta actual
+        lastSaved: "Hace instantes"
+      },
+      // Historial de Proyectos Finalizados
+      completedHistory: [
+        { patternId: "pat_pulpo_01", date: "08 Nov 2026, 18:20" },
+        { patternId: "pat_pulpo_01", date: "05 Nov 2026, 11:10" },
+        { patternId: "pat_rana_03", date: "02 Nov 2026, 16:45" }
+      ]
+    };
+
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          appState = JSON.parse(saved);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
+    function saveState() {
+      if (appState.activeProject) {
+        const now = new Date();
+        appState.activeProject.lastSaved = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      updateDebugPanel();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.remove("opacity-0");
+      setTimeout(() => t.classList.add("opacity-0"), 2400);
+    }
+
+    // ==========================================
+    // 3. NAVEGACIÓN ENTRE PANTALLAS
+    // ==========================================
+    const screens = ["welcome", "catalog", "detail", "tracker", "stats", "creator"];
+
+    function navigateTo(screenName) {
+      screens.forEach(s => {
+        document.getElementById(`screen-${s}`).classList.add("hidden");
+        const sideBtn = document.getElementById(`nav-btn-${s}`);
+        if (sideBtn) {
+          sideBtn.className = "w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition flex items-center justify-between hover:bg-[#F9F3EE] text-[#5E4E4A]";
+        }
+      });
+
+      document.getElementById(`screen-${screenName}`).classList.remove("hidden");
+      const activeSideBtn = document.getElementById(`nav-btn-${screenName}`);
+      if (activeSideBtn) {
+        activeSideBtn.className = "w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition flex items-center justify-between bg-[#F4E6DD] text-[#E07A5F]";
+      }
+
+      // Actualizar barra inferior
+      ["welcome", "catalog", "tracker", "stats"].forEach(b => {
+        const el = document.getElementById(`bnav-${b}`);
+        if (el) {
+          el.className = (b === screenName)
+            ? "flex flex-col items-center gap-0.5 text-[#E07A5F] relative"
+            : "flex flex-col items-center gap-0.5 text-[#8C7A75] relative";
+        }
+      });
+
+      // Renderizar la pantalla activa
+      if (screenName === "welcome") renderWelcome();
+      if (screenName === "catalog") renderCatalog();
+      if (screenName === "detail") renderDetail();
+      if (screenName === "tracker") renderTracker();
+      if (screenName === "stats") renderStats();
+      updateDebugPanel();
+    }
+
+    // ==========================================
+    // 4. CÁLCULO DE PROGRESO GLOBAL DE UN PATRÓN
+    // ==========================================
+    function calculateProgress(pattern, activeProj) {
+      if (!pattern || !activeProj || activeProj.patternId !== pattern.id) return { percent: 0, completedSteps: 0, totalSteps: 1 };
+      let totalRoundsAllInstances = 0;
+      let completedRoundsSoFar = 0;
+
+      pattern.piezas.forEach((pieza, pIdx) => {
+        const roundsPerInstance = pieza.vueltas.length;
+        const totalForThisPart = roundsPerInstance * pieza.cantidad;
+        totalRoundsAllInstances += totalForThisPart;
+
+        if (pIdx < activeProj.partIndex) {
+          completedRoundsSoFar += totalForThisPart;
+        } else if (pIdx === activeProj.partIndex) {
+          const finishedInstances = (activeProj.partInstance - 1) * roundsPerInstance;
+          completedRoundsSoFar += finishedInstances + activeProj.roundIndex;
+        }
+      });
+
+      const percent = Math.min(100, Math.round((completedRoundsSoFar / totalRoundsAllInstances) * 100));
+      return { percent, completedRoundsSoFar, totalRoundsAllInstances };
+    }
+
+    // ==========================================
+    // 5. RENDERIZADO DE PANTALLAS
+    // ==========================================
+
+    // --- PANTALLA 1: BIENVENIDA ---
+    function renderWelcome() {
+      document.getElementById("welcome-completed-count").textContent = appState.completedHistory.length;
+      const resumeCard = document.getElementById("welcome-resume-card");
+      const active = appState.activeProject;
+
+      if (active) {
+        const pat = appState.patterns.find(p => p.id === active.patternId);
+        if (pat) {
+          const part = pat.piezas[active.partIndex];
+          const round = part.vueltas[active.roundIndex];
+          const prog = calculateProgress(pat, active);
+
+          resumeCard.innerHTML = `
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#FFF0E6] text-[#E07A5F]">
+                📌 Proyecto en Curso Guardado
+              </span>
+              <span class="text-xs font-extrabold text-[#E07A5F]">${prog.percent}%</span>
+            </div>
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:${pat.colorBg}">
+                ${pat.icono}
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-base text-[#3D312E]">${pat.nombre}</h3>
+                <p class="text-xs text-[#6E5D58] font-semibold">
+                  Pieza: <span class="text-[#3D312E]">${part.nombre} (${active.partInstance}/${part.cantidad})</span>
+                </p>
+                <p class="text-xs text-[#E07A5F] font-bold">
+                  Vuelta ${round.numero}: ${round.instruccion}
+                </p>
+              </div>
+            </div>
+            <button onclick="navigateTo('tracker')" class="w-full py-2.5 bg-[#3D312E] hover:bg-[#2a211f] text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5">
+              <span>▶ Continuar en Vuelta ${round.numero}</span>
+            </button>
+          `;
+          return;
+        }
+      }
+
+      resumeCard.innerHTML = `
+        <div class="text-center py-3">
+          <p class="text-sm font-bold text-[#5E4E4A]">No tienes ningún tejido en pausa</p>
+          <p class="text-xs text-[#8C7A75] mt-1">Explora el catálogo para iniciar tu próximo amigurumi.</p>
+        </div>
+      `;
+    }
+
+    // --- PANTALLA 2: CATÁLOGO ---
+    function renderCatalog() {
+      const categories = ["Todos", "Apego", "Animales", "Personajes"];
+      const chipsContainer = document.getElementById("category-chips");
+      chipsContainer.innerHTML = categories.map(cat => {
+        const isSelected = appState.currentCategory === cat;
+        return `
+          <button onclick="setCategory('${cat}')" class="px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition ${
+            isSelected ? 'bg-[#3D312E] text-white shadow-sm' : 'bg-white text-[#6E5D58] border border-[#EAD9CA]'
+          }">
+            ${cat}
+          </button>
+        `;
+      }).join("");
+
+      // Contar veces realizado por patrón
+      const countMap = {};
+      appState.completedHistory.forEach(h => {
+        countMap[h.patternId] = (countMap[h.patternId] || 0) + 1;
+      });
+
+      const filtered = appState.patterns.filter(p =>
+        appState.currentCategory === "Todos" || p.categoria === appState.currentCategory
+      );
+
+      const listEl = document.getElementById("catalog-list");
+      listEl.innerHTML = filtered.map(p => {
+        const totalParts = p.piezas.reduce((acc, part) => acc + part.cantidad, 0);
+        const totalRounds = p.piezas.reduce((acc, part) => acc + (part.vueltas.length * part.cantidad), 0);
+        const timesMade = countMap[p.id] || 0;
+        const isCurrentActive = appState.activeProject && appState.activeProject.patternId === p.id;
+
+        return `
+          <div onclick="openPatternDetail('${p.id}')" class="bg-white rounded-3xl p-4 border ${isCurrentActive ? 'border-[#E07A5F] ring-2 ring-[#E07A5F]/20' : 'border-[#EAD9CA]'} shadow-sm hover:shadow-md transition cursor-pointer flex items-center gap-3.5">
+            <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shrink-0" style="background:${p.colorBg}">
+              ${p.icono}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-1.5 mb-0.5">
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-[#F5ECE4] text-[#7D6B65]">${p.categoria}</span>
+                ${timesMade > 0 ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#E3F2E9] text-[#437A57]">✓ Tejido ${timesMade}x</span>` : ''}
+                ${isCurrentActive ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#FFF0E6] text-[#E07A5F]">En curso</span>` : ''}
+              </div>
+              <h3 class="font-bold text-base text-[#3D312E] truncate">${p.nombre}</h3>
+              <p class="text-xs text-[#8C7A75] mt-0.5">
+                🧩 ${totalParts} piezas • 🔄 ${totalRounds} vueltas • ⏱️ ${p.tiempoEstimado}
+              </p>
+            </div>
+            <div class="text-[#C4B2A9] font-bold text-lg">›</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function setCategory(cat) {
+      appState.currentCategory = cat;
+      renderCatalog();
+    }
+
+    function openPatternDetail(patternId) {
+      appState.selectedPatternId = patternId;
+      saveState();
+      navigateTo("detail");
+    }
+
+    // --- PANTALLA 3: VISTA PREVIA (DETALLE) ---
+    function renderDetail() {
+      const p = appState.patterns.find(item => item.id === appState.selectedPatternId) || appState.patterns[0];
+      const totalParts = p.piezas.reduce((acc, part) => acc + part.cantidad, 0);
+      const totalRounds = p.piezas.reduce((acc, part) => acc + (part.vueltas.length * part.cantidad), 0);
+      const isAlreadyActive = appState.activeProject && appState.activeProject.patternId === p.id;
+
+      const container = document.getElementById("detail-content");
+      container.innerHTML = `
+        <div class="flex items-center justify-between">
+          <button onclick="navigateTo('catalog')" class="px-3 py-1.5 rounded-xl bg-white border border-[#EAD9CA] text-xs font-bold text-[#5E4E4A]">
+            ← Volver al Catálogo
+          </button>
+          <span class="text-xs font-bold px-3 py-1 rounded-full bg-[#F4E6DD] text-[#E07A5F]">${p.categoria} • ${p.dificultad}</span>
+        </div>
+
+        <!-- Cabecera del Diseño -->
+        <div class="bg-white rounded-3xl p-5 border border-[#EAD9CA] text-center shadow-sm">
+          <div class="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center text-5xl mb-3" style="background:${p.colorBg}">
+            ${p.icono}
+          </div>
+          <h2 class="text-2xl font-bold text-[#3D312E]">${p.nombre}</h2>
+          <p class="text-xs text-[#8C7A75] mt-1">Revisa los materiales y piezas antes de empezar</p>
+
+          <!-- Especificaciones Técnicas Grid 2x2 -->
+          <div class="grid grid-cols-2 gap-2.5 mt-4 text-left">
+            <div class="bg-[#FAF5F0] p-3 rounded-2xl border border-[#EFE2D6]">
+              <span class="text-[10px] font-bold uppercase text-[#9A8780] block">🪡 Aguja Sugerida</span>
+              <span class="text-sm font-extrabold text-[#3D312E]">${p.aguja}</span>
+            </div>
+            <div class="bg-[#FAF5F0] p-3 rounded-2xl border border-[#EFE2D6]">
+              <span class="text-[10px] font-bold uppercase text-[#9A8780] block">⏱️ Tiempo Aprox.</span>
+              <span class="text-sm font-extrabold text-[#3D312E]">${p.tiempoEstimado}</span>
+            </div>
+            <div class="bg-[#FAF5F0] p-3 rounded-2xl border border-[#EFE2D6] col-span-2">
+              <span class="text-[10px] font-bold uppercase text-[#9A8780] block">🧶 Hilo Recomendado</span>
+              <span class="text-xs font-bold text-[#3D312E]">${p.hilo}</span>
+            </div>
+            <div class="bg-[#FAF5F0] p-3 rounded-2xl border border-[#EFE2D6]">
+              <span class="text-[10px] font-bold uppercase text-[#9A8780] block">🧩 Total Piezas</span>
+              <span class="text-sm font-extrabold text-[#3D312E]">${totalParts} piezas</span>
+            </div>
+            <div class="bg-[#FAF5F0] p-3 rounded-2xl border border-[#EFE2D6]">
+              <span class="text-[10px] font-bold uppercase text-[#9A8780] block">🔄 Total Vueltas</span>
+              <span class="text-sm font-extrabold text-[#3D312E]">${totalRounds} vueltas</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desglose de Piezas -->
+        <div class="bg-white rounded-3xl p-4 border border-[#EAD9CA] space-y-2.5">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-[#9A8780]">Desglose de Piezas a Tejer</h3>
+          ${p.piezas.map(part => `
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-[#FAF5F0] border border-[#EFE2D6]">
+              <div>
+                <p class="text-sm font-bold text-[#3D312E]">${part.nombre} <span class="text-[#E07A5F]">x${part.cantidad}</span></p>
+                <p class="text-[11px] text-[#8C7A75]">${part.notas}</p>
+              </div>
+              <span class="text-xs font-bold bg-white px-2.5 py-1 rounded-lg border border-[#EAD9CA] text-[#5E4E4A]">
+                ${part.vueltas.length} vueltas c/u
+              </span>
+            </div>
+          `).join("")}
+        </div>
+
+        <!-- Botón Empezar -->
+        <div class="pt-1">
+          ${isAlreadyActive ? `
+            <button onclick="navigateTo('tracker')" class="w-full py-4 bg-[#3D312E] text-white font-bold rounded-2xl shadow-lg text-base mb-2">
+              ▶ Continuar donde me quedé
+            </button>
+            <button onclick="startNewProject('${p.id}')" class="w-full py-2.5 bg-white border border-[#EAD9CA] text-[#C53929] font-bold rounded-2xl text-xs">
+              Empezar desde cero (Reiniciar avance)
+            </button>
+          ` : `
+            <button onclick="startNewProject('${p.id}')" class="w-full py-4 bg-[#E07A5F] hover:bg-[#d16a4f] text-white font-bold rounded-2xl shadow-lg shadow-[#E07A5F]/30 text-base">
+              🧶 ¡Me convence! Empezar Proyecto
+            </button>
+          `}
+        </div>
+      `;
+    }
+
+    function startNewProject(patternId) {
+      appState.activeProject = {
+        patternId: patternId,
+        partIndex: 0,
+        partInstance: 1,
+        roundIndex: 0,
+        repCount: 0,
+        lastSaved: "Ahora"
+      };
+      saveState();
+      showToast("Proyecto iniciado • Guardado automático activo");
+      navigateTo("tracker");
+    }
+
+    // --- PANTALLA 4: MODO TEJIDO (TRACKER) ---
+    function renderTracker() {
+      const active = appState.activeProject;
+      if (!active) return;
+
+      const pat = appState.patterns.find(p => p.id === active.patternId) || appState.patterns[0];
+      const currentPart = pat.piezas[active.partIndex];
+      const prog = calculateProgress(pat, active);
+
+      document.getElementById("tracker-pattern-title").textContent = `${pat.icono} ${pat.nombre}`;
+      document.getElementById("tracker-overall-subtitle").textContent = `Guardado en Room: ${active.lastSaved}`;
+      document.getElementById("tracker-percent").textContent = `${prog.percent}%`;
+      document.getElementById("tracker-progress-bar").style.width = `${prog.percent}%`;
+
+      // Pestañas de Piezas
+      const tabsEl = document.getElementById("tracker-parts-tabs");
+      tabsEl.innerHTML = pat.piezas.map((part, idx) => {
+        const isCurrent = idx === active.partIndex;
+        const isDone = idx < active.partIndex;
+        return `
+          <button onclick="selectPart(${idx})" class="px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 ${
+            isCurrent
+              ? 'bg-[#3D312E] text-white shadow-sm'
+              : isDone
+                ? 'bg-[#E3F2E9] text-[#437A57]'
+                : 'bg-[#F5ECE4] text-[#7D6B65]'
+          }">
+            <span>${isDone ? '✓' : (idx + 1) + '.'} ${part.nombre}</span>
+            <span class="opacity-75">(x${part.cantidad})</span>
+          </button>
+        `;
+      }).join("");
+
+      // Sub-barra de instancia de pieza (ej. Tentáculo 2 de 8)
+      const instanceBar = document.getElementById("tracker-instance-bar");
+      instanceBar.innerHTML = `
+        <div class="font-bold text-[#5E4E4A]">
+          Tejiendo: <span class="text-[#E07A5F]">${currentPart.nombre} (Pieza ${active.partInstance} de ${currentPart.cantidad})</span>
+        </div>
+        <div class="text-[11px] text-[#8C7A75]">
+          Vuelta ${active.roundIndex + 1} de ${currentPart.vueltas.length}
+        </div>
+      `;
+
+      // Lista de vueltas con la vuelta actual resaltada
+      const roundsListEl = document.getElementById("tracker-rounds-list");
+      roundsListEl.innerHTML = currentPart.vueltas.map((r, rIdx) => {
+        const isCompleted = rIdx < active.roundIndex;
+        const isCurrent = rIdx === active.roundIndex;
+
+        if (isCurrent) {
+          return `
+            <div id="active-round-card" class="round-active bg-white border-2 border-[#E07A5F] rounded-3xl p-4 relative">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="px-2.5 py-0.5 rounded-full bg-[#E07A5F] text-white text-xs font-extrabold uppercase tracking-wide">
+                  👉 Vuelta Actual ${r.numero}
+                </span>
+                <span class="text-xs font-extrabold text-[#5E4E4A] bg-[#F5ECE4] px-2.5 py-1 rounded-xl">
+                  Total: ${r.puntos} pts
+                </span>
+              </div>
+              <p class="text-lg font-extrabold text-[#3D312E] my-2 leading-snug">
+                ${r.instruccion}
+              </p>
+
+              ${r.repeticiones > 1 ? `
+                <div class="mt-3 pt-2.5 border-t border-[#F0E4D8] flex items-center justify-between">
+                  <span class="text-xs font-bold text-[#7D6B65]">
+                    Contador de repeticiones: <strong class="text-[#3D312E]">${active.repCount} / ${r.repeticiones}</strong>
+                  </span>
+                  <div class="flex gap-1.5">
+                    <button onclick="changeRep(-1)" class="px-2.5 py-1 rounded-lg bg-[#F5ECE4] text-xs font-bold text-[#5E4E4A]">-</button>
+                    <button onclick="changeRep(1)" class="px-3 py-1 rounded-lg bg-[#F4A261] text-white text-xs font-bold">+1 Rep</button>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }
+
+        if (isCompleted) {
+          return `
+            <div onclick="jumpToRound(${rIdx})" class="bg-[#F4EFEA]/80 border border-[#E5D9CE] rounded-2xl p-3 flex items-center justify-between opacity-70 cursor-pointer">
+              <div class="flex items-center gap-2.5">
+                <span class="w-6 h-6 rounded-full bg-[#528265] text-white text-xs flex items-center justify-center font-bold">✓</span>
+                <div>
+                  <span class="text-xs font-bold text-[#6E5D58] line-through">Vuelta ${r.numero}: ${r.instruccion}</span>
+                </div>
+              </div>
+              <span class="text-[11px] font-bold text-[#8C7A75]">${r.puntos} pts</span>
+            </div>
+          `;
+        }
+
+        // Vueltas futuras
+        return `
+          <div onclick="jumpToRound(${rIdx})" class="bg-white/70 border border-[#EAD9CA] rounded-2xl p-3 flex items-center justify-between cursor-pointer hover:bg-white">
+            <div class="flex items-center gap-2.5">
+              <span class="w-6 h-6 rounded-full bg-[#F5ECE4] text-[#8C7A75] text-xs flex items-center justify-center font-bold">${r.numero}</span>
+              <span class="text-xs font-semibold text-[#6E5D58]">${r.instruccion}</span>
+            </div>
+            <span class="text-[11px] font-bold text-[#A38A83]">${r.puntos} pts</span>
+          </div>
+        `;
+      }).join("");
+
+      // Auto-scroll suave a la vuelta activa
+      setTimeout(() => {
+        const activeCard = document.getElementById("active-round-card");
+        if (activeCard) {
+          activeCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 50);
+
+      // Estado del botón principal inferior
+      const isLastRoundOfPart = active.roundIndex === currentPart.vueltas.length - 1;
+      const isLastInstanceOfPart = active.partInstance === currentPart.cantidad;
+      const isLastPartOfPattern = active.partIndex === pat.piezas.length - 1;
+
+      const nextBtn = document.getElementById("btn-next-round");
+      if (isLastRoundOfPart && isLastInstanceOfPart && isLastPartOfPattern) {
+        nextBtn.className = "flex-1 py-3.5 px-5 rounded-2xl bg-[#528265] hover:bg-[#436d54] text-white font-bold text-base shadow-md transition flex items-center justify-center gap-2";
+        nextBtn.innerHTML = `<span>🎉 Finalizar Proyecto</span>`;
+      } else if (isLastRoundOfPart && !isLastInstanceOfPart) {
+        nextBtn.className = "flex-1 py-3.5 px-5 rounded-2xl bg-[#E07A5F] hover:bg-[#d16a4f] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2";
+        nextBtn.innerHTML = `<span>✓ Terminar ${currentPart.nombre} ${active.partInstance}/${currentPart.cantidad} → Siguiente</span>`;
+      } else if (isLastRoundOfPart && isLastInstanceOfPart && !isLastPartOfPattern) {
+        const nextPartName = pat.piezas[active.partIndex + 1].nombre;
+        nextBtn.className = "flex-1 py-3.5 px-5 rounded-2xl bg-[#3D312E] hover:bg-[#2a211f] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2";
+        nextBtn.innerHTML = `<span>Pasar a Pieza: ${nextPartName} →</span>`;
+      } else {
+        nextBtn.className = "flex-1 py-3.5 px-5 rounded-2xl bg-[#E07A5F] hover:bg-[#d16a4f] text-white font-bold text-base shadow-md shadow-[#E07A5F]/25 transition flex items-center justify-center gap-2";
+        nextBtn.innerHTML = `<span>+ Siguiente Vuelta (V${active.roundIndex + 2})</span>`;
+      }
+    }
+
+    function changeRep(delta) {
+      const active = appState.activeProject;
+      const pat = appState.patterns.find(p => p.id === active.patternId);
+      const maxRep = pat.piezas[active.partIndex].vueltas[active.roundIndex].repeticiones;
+      active.repCount = Math.max(0, Math.min(maxRep, active.repCount + delta));
+      saveState();
+      renderTracker();
+    }
+
+    function selectPart(partIdx) {
+      appState.activeProject.partIndex = partIdx;
+      appState.activeProject.partInstance = 1;
+      appState.activeProject.roundIndex = 0;
+      appState.activeProject.repCount = 0;
+      saveState();
+      renderTracker();
+    }
+
+    function jumpToRound(rIdx) {
+      appState.activeProject.roundIndex = rIdx;
+      appState.activeProject.repCount = 0;
+      saveState();
+      renderTracker();
+    }
+
+    function resetCurrentPart() {
+      appState.activeProject.roundIndex = 0;
+      appState.activeProject.repCount = 0;
+      saveState();
+      showToast("Pieza reiniciada a la Vuelta 1");
+      renderTracker();
+    }
+
+    function prevRound() {
+      const active = appState.activeProject;
+      const pat = appState.patterns.find(p => p.id === active.patternId);
+      if (active.roundIndex > 0) {
+        active.roundIndex--;
+      } else if (active.partInstance > 1) {
+        active.partInstance--;
+        active.roundIndex = pat.piezas[active.partIndex].vueltas.length - 1;
+      } else if (active.partIndex > 0) {
+        active.partIndex--;
+        const prevPart = pat.piezas[active.partIndex];
+        active.partInstance = prevPart.cantidad;
+        active.roundIndex = prevPart.vueltas.length - 1;
+      }
+      active.repCount = 0;
+      saveState();
+      renderTracker();
+    }
+
+    function nextRoundOrFinish() {
+      const active = appState.activeProject;
+      const pat = appState.patterns.find(p => p.id === active.patternId);
+      const currentPart = pat.piezas[active.partIndex];
+
+      if (active.roundIndex < currentPart.vueltas.length - 1) {
+        active.roundIndex++;
+        active.repCount = 0;
+        saveState();
+        renderTracker();
+        return;
+      }
+
+      // Si terminó la última vuelta de una instancia y faltan más instancias (ej. Tentáculo 1 de 8)
+      if (active.partInstance < currentPart.cantidad) {
+        active.partInstance++;
+        active.roundIndex = 0;
+        active.repCount = 0;
+        saveState();
+        showToast(`${currentPart.nombre} ${active.partInstance - 1} completado • Iniciando #${active.partInstance}`);
+        renderTracker();
+        return;
+      }
+
+      // Si terminó todas las instancias de esta pieza y hay más piezas
+      if (active.partIndex < pat.piezas.length - 1) {
+        active.partIndex++;
+        active.partInstance = 1;
+        active.roundIndex = 0;
+        active.repCount = 0;
+        saveState();
+        showToast(`¡Pieza terminada! Pasando a ${pat.piezas[active.partIndex].nombre}`);
+        renderTracker();
+        return;
+      }
+
+      // ¡Proyecto Finalizado! Guardar en Historial
+      const nowStr = new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      appState.completedHistory.unshift({
+        patternId: pat.id,
+        date: nowStr
+      });
+
+      // Reiniciar a vuelta 1 por si quiere tejer otro o dejar listo
+      appState.activeProject = null;
+      saveState();
+      showToast(`🎉 ¡Felicidades! Terminaste ${pat.nombre}`);
+      navigateTo("stats");
+    }
+
+    // --- PANTALLA 5: FINALIZADOS Y MÁS REALIZADOS ---
+    function renderStats() {
+      const countMap = {};
+      appState.completedHistory.forEach(h => {
+        countMap[h.patternId] = (countMap[h.patternId] || 0) + 1;
+      });
+
+      // Ordenar patrones por cantidad de veces realizados
+      const ranked = Object.entries(countMap)
+        .map(([patId, count]) => ({
+          pattern: appState.patterns.find(p => p.id === patId),
+          count
+        }))
+        .filter(item => item.pattern)
+        .sort((a, b) => b.count - a.count);
+
+      const mostMadeEl = document.getElementById("stats-most-made");
+      if (ranked.length === 0) {
+        mostMadeEl.innerHTML = `<p class="text-xs text-[#8C7A75]">Aún no hay proyectos finalizados.</p>`;
+      } else {
+        mostMadeEl.innerHTML = ranked.map((item, idx) => `
+          <div class="bg-white p-3.5 rounded-2xl border border-[#EAD9CA] flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-[#F4E6DD] text-[#E07A5F] text-xs font-extrabold flex items-center justify-center">
+                #${idx + 1}
+              </span>
+              <span class="text-2xl">${item.pattern.icono}</span>
+              <div>
+                <p class="text-sm font-bold text-[#3D312E]">${item.pattern.nombre}</p>
+                <p class="text-[11px] text-[#8C7A75]">Categoría: ${item.pattern.categoria}</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-[#E3F2E9] text-[#437A57] text-xs font-extrabold">
+              ${item.count} ${item.count === 1 ? 'vez' : 'veces'}
+            </span>
+          </div>
+        `).join("");
+      }
+
+      const historyEl = document.getElementById("stats-history-list");
+      historyEl.innerHTML = appState.completedHistory.map(h => {
+        const pat = appState.patterns.find(p => p.id === h.patternId);
+        if (!pat) return "";
+        return `
+          <div class="bg-white/80 p-3 rounded-2xl border border-[#EAD9CA] flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span class="text-xl">${pat.icono}</span>
+              <div>
+                <p class="text-xs font-bold text-[#3D312E]">${pat.nombre}</p>
+                <p class="text-[10px] text-[#8C7A75]">Finalizado el ${h.date}</p>
+              </div>
+            </div>
+            <button onclick="openPatternDetail('${pat.id}')" class="text-[11px] font-bold text-[#E07A5F] bg-[#FFF0E6] px-2.5 py-1 rounded-lg">
+              Volver a tejer
+            </button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // --- PANTALLA 6: CREAR PROYECTO DESDE EL MÓVIL ---
+    function saveCustomPattern(e) {
+      e.preventDefault();
+      const name = document.getElementById("custom-name").value.trim();
+      const category = document.getElementById("custom-category").value;
+      const hook = document.getElementById("custom-hook").value + " mm";
+      const yarn = document.getElementById("custom-yarn").value.trim();
+      const partName = document.getElementById("custom-part-name").value.trim();
+      const partQty = parseInt(document.getElementById("custom-part-qty").value, 10) || 1;
+
+      const newPattern = {
+        id: "pat_custom_" + Date.now(),
+        nombre: name,
+        icono: "🧶",
+        colorBg: "#F4E6DD",
+        categoria: category,
+        dificultad: "Personalizado",
+        tiempoEstimado: "2 hrs",
+        hilo: yarn,
+        aguja: hook,
+        extras: ["Creado desde el móvil"],
+        piezas: [
+          {
+            idPieza: "custom_p1",
+            nombre: partName,
+            cantidad: partQty,
+            notas: "Patrón personalizado creado por el usuario.",
+            vueltas: [
+              { numero: 1, instruccion: document.getElementById("custom-r1").value, puntos: parseInt(document.getElementById("custom-r1-pts").value, 10) || 6, repeticiones: 1 },
+              { numero: 2, instruccion: document.getElementById("custom-r2").value, puntos: parseInt(document.getElementById("custom-r2-pts").value, 10) || 12, repeticiones: 6 },
+              { numero: 3, instruccion: document.getElementById("custom-r3").value, puntos: parseInt(document.getElementById("custom-r3-pts").value, 10) || 18, repeticiones: 6 }
+            ]
+          }
+        ]
+      };
+
+      appState.patterns.unshift(newPattern);
+      appState.selectedPatternId = newPattern.id;
+      saveState();
+      showToast("✨ Patrón guardado en el catálogo");
+      navigateTo("detail");
+    }
+
+    // ==========================================
+    // 6. PANEL DE DEPURACIÓN Y REINICIO SIMULADO
+    // ==========================================
+    function updateDebugPanel() {
+      const box = document.getElementById("debug-persistence");
+      const bnavDot = document.getElementById("bnav-dot");
+      const active = appState.activeProject;
+
+      if (!active) {
+        bnavDot.classList.add("hidden");
+        box.innerHTML = `<p class="text-[#8C7A75]">Sin sesión activa en curso.</p>`;
+        return;
+      }
+
+      bnavDot.classList.remove("hidden");
+      const pat = appState.patterns.find(p => p.id === active.patternId);
+      const part = pat ? pat.piezas[active.partIndex] : null;
+      const round = part ? part.vueltas[active.roundIndex] : null;
+
+      box.innerHTML = `
+        <div><strong>proyecto_id:</strong> "${active.patternId}"</div>
+        <div><strong>pieza_actual:</strong> "${part ? part.nombre : ''}" (${active.partInstance}/${part ? part.cantidad : 1})</div>
+        <div><strong>vuelta_actual:</strong> Vuelta ${round ? round.numero : 1} (${round ? round.puntos : 0} pts)</div>
+        <div><strong>finalizados_total:</strong> ${appState.completedHistory.length} proyectos</div>
+      `;
+    }
+
+    function simulateAppRestart() {
+      showToast("🔄 Reiniciando aplicación... Recuperando pieza y vuelta de Room DB");
+      setTimeout(() => {
+        loadState();
+        navigateTo("welcome");
+      }, 450);
+    }
+
+    // Inicializar al cargar
+    loadState();
+    navigateTo("welcome");
+  </script>
+</body>
+</html>
