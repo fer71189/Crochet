@@ -149,6 +149,12 @@ class CatalogViewModel(
         initialValue = CatalogUiState()
     )
 
+    init {
+        viewModelScope.launch {
+            repository.syncWithApi()
+        }
+    }
+
     fun selectCategory(category: String) {
         selectedCategoryFlow.value = category
     }
@@ -296,6 +302,13 @@ class CatalogViewModel(
 
             repository.updatePattern(patternEntity, partEntities, roundEntities)
             onUpdated(patternId)
+        }
+    }
+
+    fun compartirPatron(patternId: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val exito = repository.enviarPatronAAprobacion(patternId)
+            onResult(exito)
         }
     }
 }

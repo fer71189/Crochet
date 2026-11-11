@@ -52,6 +52,7 @@ fun PatternDetailScreen(
     isAlreadyActive: Boolean,
     onBackToCatalog: () -> Unit,
     onEditPattern: (String) -> Unit,
+    onSharePattern: (String) -> Unit,
     onStartNewProject: (String) -> Unit,
     onContinueProject: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -105,18 +106,20 @@ fun PatternDetailScreen(
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Surface(
-                    onClick = { onEditPattern(pattern.id) },
-                    shape = RoundedCornerShape(12.dp),
-                    color = WarmAccentSurface
-                ) {
-                    Text(
-                        text = "✏️ Editar Patrón",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TerracottaPrimary,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
-                    )
+                if (pattern.esPersonalizado) {
+                    Surface(
+                        onClick = { onEditPattern(pattern.id) },
+                        shape = RoundedCornerShape(12.dp),
+                        color = WarmAccentSurface
+                    ) {
+                        Text(
+                            text = "✏️ Editar Patrón",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = TerracottaPrimary,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                        )
+                    }
                 }
 
                 Surface(
@@ -408,6 +411,26 @@ fun PatternDetailScreen(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+            }
+
+            if (pattern.esPersonalizado) {
+                OutlinedButton(
+                    onClick = { onSharePattern(pattern.id) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    border = BorderStroke(1.dp, TerracottaPrimary),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.White,
+                        contentColor = TerracottaPrimary
+                    )
+                ) {
+                    Text(
+                        text = "📤 Compartir con la comunidad",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(vertical = 6.dp)
                     )
                 }
             }

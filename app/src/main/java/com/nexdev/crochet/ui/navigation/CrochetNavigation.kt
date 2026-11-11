@@ -1,5 +1,7 @@
 package com.nexdev.crochet.ui.navigation
 
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -154,6 +156,7 @@ fun CrochetApp(
                 val patternId = backStackEntry.arguments?.getString("patternId") ?: ""
                 val patternWithDetails = catalogState.patterns.find { it.pattern.id == patternId }
                 val isAlreadyActive = catalogState.activeProgressByPatternId.containsKey(patternId)
+                val context = LocalContext.current
 
                 PatternDetailScreen(
                     patternWithDetails = patternWithDetails,
@@ -163,6 +166,15 @@ fun CrochetApp(
                     },
                     onEditPattern = { id ->
                         navController.navigate(CrochetDestinations.editPatternRoute(id))
+                    },
+                    onSharePattern = { id ->
+                        catalogViewModel.compartirPatron(id) { exito ->
+                            if (exito) {
+                                Toast.makeText(context, "¡Gracias! El patrón fue enviado a revisión.", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "Error al enviar. Revisa tu conexión a internet.", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     },
                     onStartNewProject = { id ->
                         catalogViewModel.startNewProject(id) {

@@ -61,4 +61,10 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    // Cliente HTTP Retrofit y convertidor Gson para el JSON
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    // Opcional pero recomendado para manejar estados en Compose
+    implementation(libs.androidx.lifecycle.viewmodel.compose.v282)
 }
